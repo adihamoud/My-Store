@@ -1,56 +1,96 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
+import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchPhotos, setCategory } from './actions/photoActions';
 import './App.css';
 
+function CategorySelect({ value, onChange }) {
+  const options = ['animals', 'sports', 'work', 'nature', 'technology'];
+
+  return (
+    <select value={value} onChange={(e) => onChange(e.target.value)}>
+      <option value="">Select a category</option>
+      {options.map((option) => (
+        <option key={option} value={option}>
+          {option}
+        </option>
+      ))}
+    </select>
+  );
+}
+
+function Modal({ open, photo, onClose }) {
+  if (!open) return null;
+
+  return (
+    <div className="modal">
+      <div className="modal-content">
+        <h2>Photo Details</h2>
+        <p>Views: {photo.views}</p>
+        <p>Downloads: {photo.downloads}</p>
+        <p>Collection: {photo.collection}</p>
+        <button onClick={onClose}>Close</button>
+      </div>
+    </div>
+  );
+}
+
+
 function App() {
+  const dispatch = useDispatch();
+  const photos = useSelector((state) => state.photos.photos);
+  const [page, setPage] = useState(1);
+  const category = useSelector((state) => state.photos.category); // Get category from the Redux store
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedPhoto, setSelectedPhoto] = useState(null);
+
+  useEffect(() => {
+    dispatch(fetchPhotos('', 1));
+  }, [dispatch]);
+
+  const handlePrev = () => {
+    setPage(page - 1);
+    dispatch(fetchPhotos('', page - 1));
+  };
+
+  const handleNext = () => {
+    setPage(page + 1);
+    dispatch(fetchPhotos('', page + 1));
+  };
+
+  const handleCategoryChange = (category) => {
+    setPage(1);
+    dispatch(setCategory(category));
+    dispatch(fetchPhotos(category, 1));
+  };
+
+  const handlePhotoClick = (photo) => {
+    setSelectedPhoto(photo);
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
+      <div>
+        <button onClick={handlePrev}>Prev</button>
+        <CategorySelect value={category} onChange={handleCategoryChange} />
+        <button onClick={handleNext}>Next</button>
+      </div>
+      <div className="grid-container">
+        {photos.map((photo) => (
+          <div
+            key={photo.id}
+            className="grid-item"
+            onClick={() => handlePhotoClick(photo)}
           >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
+            <img src={photo.webformatURL} alt={photo.tags} />
+          </div>
+        ))}
+      </div>
+      <Modal open={modalOpen} photo={selectedPhoto} onClose={closeModal} />
     </div>
   );
 }
