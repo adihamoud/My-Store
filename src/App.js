@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchPhotos, setCategory } from './actions/photoActions';
+
 import './App.css';
+
+
 
 function CategorySelect({ value, onChange }) {
   const options = ['animals', 'sports', 'work', 'nature', 'technology'];
@@ -49,12 +52,12 @@ function App() {
 
   const handlePrev = () => {
     setPage(page - 1);
-    dispatch(fetchPhotos('', page - 1));
+    dispatch(fetchPhotos(category, page - 1));
   };
 
   const handleNext = () => {
     setPage(page + 1);
-    dispatch(fetchPhotos('', page + 1));
+    dispatch(fetchPhotos(category, page + 1));
   };
 
   const handleCategoryChange = (category) => {
@@ -92,6 +95,7 @@ function App() {
       </div>
       <Modal open={modalOpen} photo={selectedPhoto} onClose={closeModal} />
     </div>
+
   );
 }
 
