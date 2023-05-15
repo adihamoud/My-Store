@@ -1,29 +1,31 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchPhotos, setCategory } from '../components/photoActions';
+import { fetchPhotos, setCategory } from './photoActions';
 
 /**
  * Custom hook to manage photo navigation, including fetching data and updating category.
  *
- * @param {string} initialCategory - The initial category to load.
- * @returns {Array} An array containing category, page, handlePrev, handleNext, handleCategoryChange, handlePhotoClick, and closeModal.
+ * @param {string} initialCategory - The initial category of photos to fetch.
+ * @returns {Array} Array containing category, page number, and handler functions for previous page, next page, category change, photo click, and modal closing.
  */
 export function usePhotoNavigation(initialCategory) {
   const dispatch = useDispatch();
   const photos = useSelector((state) => state.photos.photos);
   const [page, setPage] = useState(1);
   const category = useSelector((state) => state.photos.category);
-  const [selectedPhoto, setSelectedPhoto] = useState(null);
+  
 
   useEffect(() => {
     dispatch(fetchPhotos(initialCategory, 1));
   }, [dispatch, initialCategory]);
 
   const handlePrev = () => {
-    setPage(page - 1);
-    dispatch(fetchPhotos(category, page - 1));
+    if (page > 1) { 
+      setPage(page - 1);
+      dispatch(fetchPhotos(category, page - 1));
+    }
   };
-
+  
   const handleNext = () => {
     setPage(page + 1);
     dispatch(fetchPhotos(category, page + 1));
@@ -35,13 +37,6 @@ export function usePhotoNavigation(initialCategory) {
     dispatch(fetchPhotos(newCategory, 1));
   };
 
-  const handlePhotoClick = (photo) => {
-    setSelectedPhoto(photo);
-  };
-
-  const closeModal = () => {
-    setSelectedPhoto(null);
-  };
 
   return [
     category,
@@ -49,8 +44,5 @@ export function usePhotoNavigation(initialCategory) {
     handlePrev,
     handleNext,
     handleCategoryChange,
-    handlePhotoClick,
-    closeModal,
   ];
 }
-

@@ -1,10 +1,10 @@
 import React from 'react';
 
 /**
- * Modal component displays a modal with photo details.
- * @param {boolean} open - Determines if the modal is open or not.
- * @param {Object} photo - A photo object containing the details to be displayed.
- * @param {Function} onClose - A function to handle the closing of the modal.
+ * Modal - displays photo details in a modal.
+ * @param {boolean} open - Modal's open status.
+ * @param {Object} photo - Photo details.
+ * @param {Function} onClose - Function to close the modal.
  */
 export function Modal({ open, photo, onClose }) {
   if (!open) return null;
@@ -15,7 +15,11 @@ export function Modal({ open, photo, onClose }) {
         <h2>Photo Details</h2>
         <p>Views: {photo.views}</p>
         <p>Downloads: {photo.downloads}</p>
-        <p>Collection: {photo.collection}</p>
+        <p>Likes: {photo.likes}</p>
+        <p>Collections: {photo.collections}</p>
+        <p>Comments: {photo.comments}</p>
+        <p>User: {photo.user}</p>
+        <p>Tags: {photo.tags}</p>
         <button onClick={onClose}>Close</button>
       </div>
     </div>

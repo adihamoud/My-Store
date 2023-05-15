@@ -1,9 +1,9 @@
 import React from 'react';
 
 /**
- * CategorySelect component displays a dropdown for selecting a photo category.
- * @param {string} value - The currently selected category.
- * @param {Function} onChange - A function to handle the change of the category.
+ * CategorySelect - a dropdown for photo categories.
+ * @param {string} value - Current category.
+ * @param {Function} onChange - Function to update the category.
  */
 export function CategorySelect({ value, onChange }) {
   const options = ['animals', 'sports', 'work', 'nature', 'technology'];
@@ -19,5 +19,3 @@ export function CategorySelect({ value, onChange }) {
     </select>
   );
 }
-
-

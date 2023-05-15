@@ -1,9 +1,9 @@
 import React from 'react';
 
 /**
- * ImageGrid component displays a grid of images based on the provided data.
- * @param {Array} photos - An array of photo objects to be displayed in the grid.
- * @param {Function} onPhotoClick - A function to handle click events on a photo.
+ * ImageGrid - a grid display for images.
+ * @param {Array} photos - Photo data for display.
+ * @param {Function} onPhotoClick - Function to handle photo click events.
  */
 export function ImageGrid({ photos, onPhotoClick }) {
   return (
@@ -20,4 +20,3 @@ export function ImageGrid({ photos, onPhotoClick }) {
     </div>
   );
 }
-

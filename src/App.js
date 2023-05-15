@@ -1,11 +1,12 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
-import {ImageGrid} from './components/ImageGrid';
-import {Modal} from './components/Modal';
-import {CategorySelect} from './components/CategorySelect';
-import {NavigationButtons} from './components/NavigationButtons';
-import {usePhotoNavigation} from './hooks/usePhotoNavigation';
-import './App.css';
+import { useState, React } from "react";
+import { useSelector } from "react-redux";
+import { ImageGrid } from "./components/ImageGrid";
+import { Modal } from "./components/Modal";
+import { CategorySelect } from "./components/CategorySelect";
+import { NavigationButtons } from "./components/NavigationButtons";
+import { usePhotoNavigation } from "./components/usePhotoNavigation";
+
+import "./App.css";
 
 /**
  * Main application component.
@@ -13,16 +14,26 @@ import './App.css';
  * @returns {JSX.Element} The rendered App component.
  */
 function App() {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedPhoto, setSelectedPhoto] = useState(null);
+
+  const handlePhotoClick = (photo) => {
+    setSelectedPhoto(photo);
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setSelectedPhoto(null);
+    setModalOpen(false);
+  };
+
   const photos = useSelector((state) => state.photos.photos);
-  const [
+   const [
     category,
     page,
     handlePrev,
     handleNext,
     handleCategoryChange,
-    handlePhotoClick,
-    closeModal,
-    selectedPhoto,
   ] = usePhotoNavigation('');
 
   return (
@@ -37,11 +48,7 @@ function App() {
       <ImageGrid photos={photos} onPhotoClick={handlePhotoClick} />
 
       {/* Photo details modal */}
-      <Modal
-        open={Boolean(selectedPhoto)}
-        photo={selectedPhoto}
-        onClose={closeModal}
-      />
+      <Modal open={modalOpen} photo={selectedPhoto} onClose={closeModal} />
     </div>
   );
 }
